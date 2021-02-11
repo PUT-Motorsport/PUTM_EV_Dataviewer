@@ -1,0 +1,10 @@
+digraph a{
+    "backend sieciowy" -> "tryb 'live'";
+    "backend z pliku" -> "tryb 'live'";
+    "tryb statyczny" -> "wybór trybu"
+    "tryb 'live'" -> "wybór trybu"
+    "ładowanie pliku" -> "tryb statyczny" 
+    "wybór trybu" -> "nakładka graficzna"
+    "ustawienia" ->"wybór trybu"
+    "nakładka graficzna" ->ustawienia
+}
