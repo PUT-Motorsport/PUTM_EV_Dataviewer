@@ -1,8 +1,8 @@
 # GNU/Linux Build:
 1. Clone the repository:
 	```bash
-	$ git clone #<link to repo>
-	$ cd #<repo-name>
+	$ git clone https://github.com/PUT-Motorsport/PUTM_EV_Dataviewer
+	$ cd PUTM_EV_Dataviewer
 	```
 2. Install additional dependencies into POC/imgui-POC subfolder
 
