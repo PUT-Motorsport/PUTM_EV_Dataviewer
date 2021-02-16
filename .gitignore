@@ -13,7 +13,7 @@ __pycache__/
 
 *.o
 #ignore dependency --imgui
-/POC/imgui/imgui
+/POC/imgui-POC/imgui
 
 #ignore vscode directory
 /.vscode
