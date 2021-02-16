@@ -1,4 +1,7 @@
 CPPFLAGS_END = -lPocoUtil -lPocoXML -lPocoJSON -lPocoNet -lPocoFoundation -lpthread
+WX_FLAGS = $(shell wx-config --libs)
+WX_CXXFLAGS = $(shell wx-config --cxxflags)
+
 CPPFLAGS = 
 SRCS := $(wildcard *.cpp)
 OBJ := $(SRCS:%.cpp=%.o)
@@ -10,12 +13,12 @@ all: main
 
 main: ${OBJ}
 	@echo "Linking files"
-	$(COMPILER) $(CPPFLAGS) -o main ${OBJ} $(CPPFLAGS_END)
+	$(COMPILER) $(WX_FLAGS) $(WX_CXXFLAGS) $(CPPFLAGS) -o main ${OBJ} $(CPPFLAGS_END)
 run: main
 	@./main
 
-main.o: main.cpp 
-	$(COMPILER) $(CPPFLAGS) -c main.cpp $(CPPFLAGS_END)
+main.o: main.cpp
+	$(COMPILER) $(WX_FLAGS) $(WX_CXXFLAGS) $(CPPFLAGS) -c main.cpp $(CPPFLAGS_END)
 
 clean: 
 	@echo "Cleaning binary files"
@@ -24,4 +27,4 @@ clean:
 
 #add all h files w/o cpp files
 %.o: %.cpp %.h
-	$(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END)
+	$(COMPILER) $(WX_FLAGS) $(WX_CXXFLAGS) $(CPPFLAGS) -c $< $(CPPFLAGS_END)

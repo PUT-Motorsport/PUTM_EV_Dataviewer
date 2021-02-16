@@ -1,0 +1,29 @@
+
+
+using namespace std;
+
+
+
+/** HTTP CODE BEGIN
+
+Data_container data = *dataPointer;
+while(true)
+{
+	//cout<<data.get_data_flag()<<endl;
+	if(data.get_data_flag()==true)
+	{
+		cout<<"Peek: "<<data.peek_a()<<" "<<data.peek_b()<<endl;
+		data.pull_down_data_flag();
+		stringstream a;
+		a << data.peek_a();
+		string str = a.str();
+		frame->SetStatusText(str);
+	}
+	// usleep(1000000/2);
+}
+
+Data_container data(0,0);
+thread http_thread(tFunction,&data);
+http_thread.detach();
+
+HTTP CODE END **/
