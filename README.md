@@ -11,7 +11,17 @@
 	$ echo "install poco according to instructions"
 	$ echo "I had mine compiled so dunno for now"
 	```
-	2.2 Install IMGUI and additional sources
+	2.2: Install allegro5:
+	
+	- Debian/ubuntu:
+	```bash 
+	$ sudo apt install allegro
+	```
+	- Arch/Manjaro:
+	```bash 
+	$ sudo pacman -S allegro
+	```
+	2.3 Install IMGUI and additional sources
 	```bash
 	$ cd POC/imgui-POC
 	$ git clone https://github.com/ocornut/imgui
