@@ -10,7 +10,7 @@ Celem projektu jest wizualizacja danych zbieranych w czasie jazdy przez Datalogg
 
 ## Wybór technologii wykonania:
 
-Językiem programowania wybranym do tego projektu będzie C++. Zewnętrzne biblioteki użyte w programie będą musiały być kompatybilne z systemami Windows oraz Linux, w związku z czym użyta zostanie biblioteka POCO do celów sieciowych i wxWidgets jako biblioteka graficzna. 
+Językiem programowania wybranym do tego projektu będzie C++. Zewnętrzne biblioteki użyte w programie będą musiały być kompatybilne z systemami Windows oraz Linux, w związku z czym użyta zostanie biblioteka POCO do celów sieciowych i Dear ImGui jako biblioteka graficzna. 
 
 ## Struktura programu:
 
