@@ -2,14 +2,15 @@ const http = require("http");
 const host = 'localhost';
 const port = 8000;
 
-let a = 100;
-let b = 12;
+let a = 1.0;
+let b = 1.0;
 
 const requestListener = function (req, res) {
     res.writeHead(200);
-    a+=1;
-    b+=2;
-    res.end(a.toString()+","+b.toString());
+    a+=0.2;
+    b+=0.4;
+
+    res.end(Math.sin(a).toFixed(8).toString()+","+Math.sin(b).toFixed(8).toString());
 };
 
 const server = http.createServer(requestListener);
