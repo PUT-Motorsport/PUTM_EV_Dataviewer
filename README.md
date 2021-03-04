@@ -7,6 +7,7 @@
 2. Install additional dependencies into src/ subfolder
 
 	2.1: Install POCO
+	
 	Compile/install complete POCO libraries according to https://pocoproject.org/download.html#building
 	
 	2.2: Install allegro5:
