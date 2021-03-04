@@ -4,13 +4,10 @@
 	git clone https://github.com/PUT-Motorsport/PUTM_EV_Dataviewer
 	cd PUTM_EV_Dataviewer
 	```
-2. Install additional dependencies into POC/imgui-POC subfolder
+2. Install additional dependencies into src/ subfolder
 
 	2.1: Install POCO
-	```bash
-	echo "install poco according to instructions"
-	echo "I had mine compiled so dunno for now"
-	```
+	Compile/install complete POCO libraries according to https://pocoproject.org/download.html#building
 	2.2: Install allegro5:
 	
 	- Debian/ubuntu:
@@ -23,7 +20,7 @@
 	```
 	2.3 Install IMGUI and additional sources
 	```bash
-	cd POC/imgui-POC
+	cd src/
 	git clone https://github.com/ocornut/imgui
 	git clone https://github.com/soulthreads/imgui-plot
 	```
