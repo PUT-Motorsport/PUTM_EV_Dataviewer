@@ -75,3 +75,8 @@ unsigned int Data_container::get_vector_size(int num)
 	}
 	return this->data[num]->size();
 }
+
+int Data_container::get_num_data()
+{
+	return this->num_data;
+}

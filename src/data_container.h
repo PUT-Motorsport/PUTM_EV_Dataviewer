@@ -17,4 +17,5 @@ public:
 	bool peek_data_flag();
 	float* get_vector_data_ptr(int num);
 	unsigned int get_vector_size(int num);
+	int get_num_data();
 };

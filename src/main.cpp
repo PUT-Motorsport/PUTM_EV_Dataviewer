@@ -20,7 +20,7 @@ void tFunction(Data_container* dataPointer)
 	http_client client("127.0.0.1",8000);
 	stringstream response;
 	string word;
-	string a[2];
+	string a[4]; //TODO: Change that to something more safe then static declaration
 	while(true)
 	{
 		try
@@ -35,6 +35,8 @@ void tFunction(Data_container* dataPointer)
 			//cout<<"Data: "<<a[0]<<" "<<a[1]<<endl;
 			data.push_to_vector(0,stof(a[0]));
 			data.push_to_vector(1,stof(a[1]));
+			data.push_to_vector(2,stof(a[2]));
+			data.push_to_vector(3,stof(a[3])); //TODO: Kinda the same
 			data.raise_data_flag();
 			usleep(0.25*1000000);
 		}
@@ -71,7 +73,7 @@ int main()
 	ImVec4 background_color = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
 
 	//setup basic http I/O
-	Data_container data(2);
+	Data_container data(4);
 	thread http_thread(tFunction,&data);
 	http_thread.detach();
 	string str="";

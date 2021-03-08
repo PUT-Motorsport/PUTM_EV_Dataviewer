@@ -13,6 +13,8 @@
 #include "imgui/imgui_plot.h"
 #include "imgui/imgui_impl_allegro5.h"
 
+#define MAX_DATA_STREAMS 32
+
 struct Visibility_windows
 {
 	bool menu_bar=true;
@@ -22,7 +24,15 @@ struct Visibility_windows
 class Windows
 {
 	ImGuiWindowFlags main_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar;
+
+	const ImU32 sample_colors[MAX_DATA_STREAMS] = { ImColor(255, 255, 0), 
+													ImColor(255, 0, 255), 
+													ImColor(0, 255, 255),
+													ImColor(255, 255, 255) };
+	
 	int frame_count = 20;
+	bool* data_visibility = nullptr;
+
 public:
 	void http_window(Data_container* data_ptr);
 	void select_window(Visibility_windows* visibility);
