@@ -19,6 +19,7 @@ struct Visibility_windows
 {
 	bool menu_bar=true;
 	bool plots=false;
+	bool static_plots = false;
 };
 
 class Windows
@@ -32,8 +33,9 @@ class Windows
 	
 	int frame_count = 20;
 	bool* data_visibility = nullptr;
-
+	int static_offset=0;
 public:
 	void http_window(Data_container* data_ptr);
+	void static_window(Data_container* data);
 	void select_window(Visibility_windows* visibility);
 };

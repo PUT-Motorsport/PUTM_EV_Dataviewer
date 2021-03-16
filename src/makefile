@@ -13,13 +13,12 @@ COMPILER = g++
 all: main 
 
 main: ${OBJ} ${OBJ_IMGUI}
-	@echo "Linking files"
-	$(COMPILER) $(CPPFLAGS) -o data_view ${OBJ} ${OBJ_IMGUI} $(CPPFLAGS_END)
+	@($(COMPILER) $(CPPFLAGS) -o data_view ${OBJ} ${OBJ_IMGUI} $(CPPFLAGS_END))
 run: main
-	@./data_view
+	@(./data_view)
 
 main.o: main.cpp
-	$(COMPILER) $(CPPFLAGS) -c main.cpp $(CPPFLAGS_END)
+	@($(COMPILER) $(CPPFLAGS) -c main.cpp $(CPPFLAGS_END))
 
 clean: 
 	@echo "Cleaning binary files"
@@ -29,9 +28,9 @@ clean:
 
 #add all h files w/o cpp files
 %.o: %.cpp %.h
-	$(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END)
+	@($(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END))
 
 imgui/%.o: imgui/%.cpp imgui/%.h
-	$(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END) -o $(shell echo $< | cut -d . -f 1).o
+	@($(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END) -o $(shell echo $< | cut -d . -f 1).o)
 	
 

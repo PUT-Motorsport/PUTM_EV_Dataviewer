@@ -38,7 +38,7 @@ void tFunction(Data_container* dataPointer)
 			data.push_to_vector(2,stof(a[2]));
 			data.push_to_vector(3,stof(a[3])); //TODO: Kinda the same
 			data.raise_data_flag();
-			usleep(0.25*1000000);
+			usleep(0.05*1000000);
 		}
 		catch(Exception &e)
 		{
@@ -74,6 +74,9 @@ int main()
 
 	//setup basic http I/O
 	Data_container data(4);
+	Data_container* static_data=nullptr;
+
+	//TODO: Make a connection only in live mode
 	thread http_thread(tFunction,&data);
 	http_thread.detach();
 	string str="";
@@ -116,10 +119,16 @@ int main()
 		}
 		if(visibility.plots)
 		{
-			int size_y = 32;
 			ImGui::SetNextWindowPos(ImVec2(0,0));
 			ImGui::SetNextWindowSize(ImVec2(WINDOW_WIDTH, WINDOW_HEIGHT-size_y));
 			windows.http_window(&data);
+		}
+		if(visibility.static_plots)
+		{
+			visibility.plots = false;
+			ImGui::SetNextWindowPos(ImVec2(0,0));
+			ImGui::SetNextWindowSize(ImVec2(WINDOW_WIDTH, WINDOW_HEIGHT-size_y));
+			windows.static_window(static_data);
 		}
 
 		ImGui::Render();
@@ -132,5 +141,8 @@ int main()
 	ImGui::DestroyContext();
 	al_destroy_event_queue(queue);
 	al_destroy_display(display);
+	
+	//free-null all the shit
+	
 	return 0;
 }
