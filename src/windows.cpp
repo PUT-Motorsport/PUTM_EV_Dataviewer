@@ -1,5 +1,7 @@
 #include "windows.h"
 
+#define SLOWING_FACTOR 40
+
 using namespace std;
 
 void Windows::http_window(Data_container* data)
@@ -93,7 +95,8 @@ void Windows::http_window(Data_container* data)
 void Windows::static_window(Data_container* data)
 {
 	ImGui::Begin("Static",NULL,this->main_flags);
-	
+	ImGui::SetNextWindowPos(ImVec2(100,0));
+	ImGui::BeginChild("child",ImVec2(1500,ImGui::GetWindowHeight()),false,this->main_flags);
 	if(data == nullptr)
 	{
 		data = new Data_container(4);	
@@ -113,7 +116,7 @@ void Windows::static_window(Data_container* data)
 				nums[it] = i;
 				it+=1; 
 				if (temp.peek() == ',')
-            		temp.ignore();
+					temp.ignore();
 			}
 			for(int i=0;i<4;i++)
 			{
@@ -122,24 +125,43 @@ void Windows::static_window(Data_container* data)
 			}
 		}
 		file.close();
+		if(this->static_data_visibility==nullptr)
+		{
+			this->static_data_visibility = new bool [4];
+			for(int i=0;i<data->get_num_data();i++)
+				this->static_data_visibility[i]=true;
+		}
 	}		
 	ImGui::Text("This is static mode and that's a file in my ~/.files/ folder:");
 	static uint32_t selection_start = 0, selection_length = 0;
 	if(ImGui::IsWindowHovered()) 
 	{
-            this->static_offset += (int)(ImGui::GetIO().MouseWheel);
+			this->static_offset += int(ImGui::GetIO().MouseWheel*(1 + this->static_frame_count / SLOWING_FACTOR));
+			if(this->static_offset < 0)
+				this->static_offset = 0;
 			cout<<this->static_offset<<endl;
 	}
-			//float test[5]={1.0f,2.0f,3.0f,4.0f,5.0f};
 	float* testlist[4];
-	for(int i=0;i<4;i++)
-		testlist[i] = data->get_vector_data_ptr(i);
-	ImGui::PlotConfig conf;	
+	ImU32 colors[4];
+	//for(int i=0;i<4;i++)
+	//	testlist[i] = data->get_vector_data_ptr(i);
+	int iterator = 0;
+	for(int i=0;i<data->get_num_data();i++)
+	{
+		if(this->static_data_visibility[i])
+		{
+			testlist[iterator] = data->get_vector_data_ptr(i);
+			colors[iterator] = sample_colors[i];
+			iterator++;
+		}
+	}
+	
+	ImGui::PlotConfig conf;
 	conf.values.offset = this->static_offset;
-	conf.values.count = 99;
+	conf.values.count = this->static_frame_count;
 	conf.values.ys_list = (const float**)&testlist;
-	conf.values.ys_count = 4;
-	conf.values.colors = this->sample_colors;
+	conf.values.ys_count = iterator;
+	conf.values.colors = colors;
 	conf.scale.min = 0;
 	conf.scale.max = 100;
 	conf.tooltip.show = true;
@@ -148,8 +170,8 @@ void Windows::static_window(Data_container* data)
 	conf.grid_x.subticks = 1;
 	conf.grid_y.show = true;
 	conf.line_thickness = 2.f;
-	conf.grid_y.size = 1;
-	conf.grid_y.subticks = 2;
+	conf.grid_y.size = conf.scale.max/2;
+	conf.grid_y.subticks = 1;
 	conf.selection.show = true;
 	conf.selection.start = &selection_start;
 	conf.selection.length = &selection_length;
@@ -164,7 +186,24 @@ void Windows::static_window(Data_container* data)
 	conf.values.offset = selection_start;
 	conf.values.count = selection_length;
 	conf.line_thickness = 2.f;
+	
+	ImGui::SliderInt("Scale",&(this->static_frame_count),5,300);
+	
 	ImGui::Plot("plot3", conf);
+
+	ImGui::EndChild();
+
+	ImGui::SetNextWindowPos(ImVec2(0,0));
+	ImGui::BeginChild("choice",ImVec2(100,ImGui::GetWindowHeight()),false,this->main_flags);
+	ImGui::Text(" Show:");
+	for(int i=0; i<data->get_num_data();i++)
+	{
+		stringstream ss;
+		ss << "Data " << i;
+		string asdf = ss.str();
+		ImGui::Checkbox(asdf.c_str(),this->static_data_visibility+i);
+	}
+	ImGui::EndChild();
 
 	ImGui::End();
 }

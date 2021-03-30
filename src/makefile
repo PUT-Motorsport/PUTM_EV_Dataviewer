@@ -1,4 +1,4 @@
-CPPFLAGS_END = -lPocoUtil -lPocoXML -lPocoJSON -lPocoNet -lPocoFoundation -lpthread -lallegro -lallegro_main -lallegro_primitives
+CPPFLAGS_END = -lPocoNet -lPocoFoundation -lpthread -lallegro -lallegro_main -lallegro_primitives
 
 CPPFLAGS = -Wall 
 SRCS := $(wildcard *.cpp)
@@ -13,24 +13,24 @@ COMPILER = g++
 all: main 
 
 main: ${OBJ} ${OBJ_IMGUI}
-	@($(COMPILER) $(CPPFLAGS) -o data_view ${OBJ} ${OBJ_IMGUI} $(CPPFLAGS_END))
+	$(COMPILER) $(CPPFLAGS) -o data_view ${OBJ} ${OBJ_IMGUI} $(CPPFLAGS_END)
 run: main
-	@(./data_view)
+	./data_view
 
 main.o: main.cpp
-	@($(COMPILER) $(CPPFLAGS) -c main.cpp $(CPPFLAGS_END))
+	$(COMPILER) $(CPPFLAGS) -c main.cpp $(CPPFLAGS_END)
 
 clean: 
-	@echo "Cleaning binary files"
+	echo "Cleaning binary files"
 	rm *.o
 	rm imgui/*.o
 	rm data_view
 
 #add all h files w/o cpp files
 %.o: %.cpp %.h
-	@($(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END))
+	$(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END)
 
 imgui/%.o: imgui/%.cpp imgui/%.h
-	@($(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END) -o $(shell echo $< | cut -d . -f 1).o)
-	
+	$(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END) -o $(shell echo $< | cut -d . -f 1).o
+
 

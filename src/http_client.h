@@ -8,10 +8,13 @@
 #include <Poco/URI.h>
 #include <Poco/Exception.h>
 #include <bits/stdc++.h>
+#include "data_container.h"
 
 using namespace Poco::Net;
 using namespace Poco;
 using namespace std;
+
+void tFunction(Data_container* dataPointer);
 
 class http_client
 {

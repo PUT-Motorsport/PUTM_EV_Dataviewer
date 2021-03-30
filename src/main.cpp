@@ -12,41 +12,6 @@
 using namespace std;
 
 
-void tFunction(Data_container* dataPointer)
-{
-	//cout<<"a"<<endl;
-	Data_container data = *dataPointer;
-	//cout<<"Test: "<<data.peek_a()<<" "<<data.peek_b()<<endl;
-	http_client client("127.0.0.1",8000);
-	stringstream response;
-	string word;
-	string a[4]; //TODO: Change that to something more safe then static declaration
-	while(true)
-	{
-		try
-		{
-			response.str(std::string());
-			response.clear();
-			//cout<<"stream content: "<<response.str()<<endl;
-			int iterator = 0;	
-			client.send_request(&response,0);
-			while(getline(response, word, ',')) 
-				a[iterator++] = word;
-			//cout<<"Data: "<<a[0]<<" "<<a[1]<<endl;
-			data.push_to_vector(0,stof(a[0]));
-			data.push_to_vector(1,stof(a[1]));
-			data.push_to_vector(2,stof(a[2]));
-			data.push_to_vector(3,stof(a[3])); //TODO: Kinda the same
-			data.raise_data_flag();
-			usleep(0.05*1000000);
-		}
-		catch(Exception &e)
-		{
-			cout<<e.displayText()<<endl;
-		}
-	}
-}
-
 int main()
 {
 	//Create allegro event and display handler
@@ -77,8 +42,7 @@ int main()
 	Data_container* static_data=nullptr;
 
 	//TODO: Make a connection only in live mode
-	thread http_thread(tFunction,&data);
-	http_thread.detach();
+	thread* http_thread = nullptr;
 	string str="";
 
 	//Visibility_windows variable
@@ -119,6 +83,11 @@ int main()
 		}
 		if(visibility.plots)
 		{
+			if(http_thread == nullptr)
+			{
+				http_thread = new thread(tFunction,&data);
+				http_thread->detach();
+			}
 			ImGui::SetNextWindowPos(ImVec2(0,0));
 			ImGui::SetNextWindowSize(ImVec2(WINDOW_WIDTH, WINDOW_HEIGHT-size_y));
 			windows.http_window(&data);
@@ -143,6 +112,10 @@ int main()
 	al_destroy_display(display);
 	
 	//free-null all the shit
+	free(http_thread);
+	http_thread = nullptr;
 	
+	free(static_data);
+	static_data=nullptr;
 	return 0;
 }

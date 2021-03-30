@@ -31,9 +31,16 @@ class Windows
 													ImColor(0, 255, 255),
 													ImColor(255, 255, 255) };
 	
+	//variables for http_window
 	int frame_count = 20;
 	bool* data_visibility = nullptr;
+	
+	//variables for static_window
+	bool* static_data_visibility = nullptr;
+	int static_frame_count = 20;
 	int static_offset=0;
+	int static_data_size;
+
 public:
 	void http_window(Data_container* data_ptr);
 	void static_window(Data_container* data);
