@@ -34,7 +34,7 @@ int main()
 	ImPlot::CreateContext();
 	
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
 	ImGui::StyleColorsDark();
 	ImGui_ImplAllegro5_Init(display);
 
