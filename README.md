@@ -25,6 +25,7 @@
 	cd src/
 	git clone https://github.com/ocornut/imgui
 	git clone https://github.com/soulthreads/imgui-plot
+	git clone https://github.com/epezent/implot
 	```
 3. Copy backend files from imgui/backends subfolder
 	```bash
@@ -35,6 +36,8 @@
 	```bash
 	cp ../imgui-plot/include/* ./
 	cp ../imgui-plot/src/* ./
+	cp ../implot/*.cpp ./
+	cp ../implot/*.h ./
 	```
 5. Make and run the binary
 	```bash

@@ -6,11 +6,11 @@
 #include <allegro5/allegro_primitives.h>
 #include "imgui/imgui.h"
 #include "imgui/imgui_plot.h"
-#include "imgui/imgui_impl_allegro5.h"
 #include "windows.h"
 
 using namespace std;
 
+//https://github.com/aiekick/ImGuiFileDialog
 
 int main()
 {
@@ -30,6 +30,9 @@ int main()
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
+	ImPlot::CreateContext();
+	
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
 	ImGui::StyleColorsDark();
@@ -97,7 +100,12 @@ int main()
 			visibility.plots = false;
 			ImGui::SetNextWindowPos(ImVec2(0,0));
 			ImGui::SetNextWindowSize(ImVec2(WINDOW_WIDTH, WINDOW_HEIGHT-size_y));
-			windows.static_window(static_data);
+			if(static_data == nullptr)
+			{
+				static_data = windows.load_data(static_data);
+			}
+			else	
+				windows.static_window(static_data);
 		}
 
 		ImGui::Render();
@@ -107,6 +115,9 @@ int main()
 	}
 
 	ImGui_ImplAllegro5_Shutdown();
+
+	ImPlot::DestroyContext();
+	
 	ImGui::DestroyContext();
 	al_destroy_event_queue(queue);
 	al_destroy_display(display);

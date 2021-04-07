@@ -9,9 +9,15 @@
 #include <stdint.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
-#include "imgui/imgui.h"
+#include <imgui/imgui.h>
 #include "imgui/imgui_plot.h"
 #include "imgui/imgui_impl_allegro5.h"
+#include "imgui/imgui_impl_allegro5.h"
+#include "imgui/ImGuiFileDialog.h"
+
+
+//this might be it bois
+#include "imgui/implot.h"
 
 #define MAX_DATA_STREAMS 32
 
@@ -36,13 +42,14 @@ class Windows
 	bool* data_visibility = nullptr;
 	
 	//variables for static_window
-	bool* static_data_visibility = nullptr;
 	int static_frame_count = 20;
 	int static_offset=0;
 	int static_data_size;
+	volatile float static_x[1000];
 
 public:
 	void http_window(Data_container* data_ptr);
 	void static_window(Data_container* data);
 	void select_window(Visibility_windows* visibility);
+	Data_container* load_data(Data_container* static_data);
 };
