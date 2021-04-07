@@ -1,6 +1,6 @@
-CPPFLAGS_END = -lPocoNet -lPocoFoundation -lpthread -lallegro -lallegro_main -lallegro_primitives
+CPPFLAGS_END = -lPocoNet -lPocoFoundation -lpthread -lallegro -lallegro_main -lallegro_primitives 
 
-CPPFLAGS = -Wall 
+CPPFLAGS = -Wall -std=c++11 -I $(shell pwd)/ -L $(shell pwd)
 SRCS := $(wildcard *.cpp)
 SRCS_IMGUI := $(wildcard imgui/*.cpp)
 #SRCS = $(wildcard */*.cpp)
