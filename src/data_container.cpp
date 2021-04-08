@@ -80,3 +80,18 @@ int Data_container::get_num_data()
 {
 	return this->num_data;
 }
+
+void  Data_container::push_name(string a)
+{
+	this->names.push_back(a);
+}
+string* Data_container::get_names()
+{
+	return this->names.data();
+}
+string  Data_container::pop_name()
+{
+	string a = *(this->names.end());
+	this->names.pop_back();
+	return a;
+}

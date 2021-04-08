@@ -47,9 +47,15 @@ class Windows
 	int static_data_size;
 	volatile float static_x[1000];
 
+
+	//variables for parsing_window
+	bool load=false;
+	bool load_header=false;
+	vector<pair<std::string,bool>*> names;
 public:
 	void http_window(Data_container* data_ptr);
 	void static_window(Data_container* data);
 	void select_window(Visibility_windows* visibility);
-	Data_container* load_data(Data_container* static_data);
+	void load_file(fstream** file);
+	void parsing_window(Data_container** static_data,std::fstream* file);
 };

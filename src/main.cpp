@@ -47,6 +47,7 @@ int main()
 	//TODO: Make a connection only in live mode
 	thread* http_thread = nullptr;
 	string str="";
+	fstream* file = nullptr;
 
 	//Visibility_windows variable
 	Visibility_windows visibility;
@@ -102,7 +103,10 @@ int main()
 			ImGui::SetNextWindowSize(ImVec2(WINDOW_WIDTH, WINDOW_HEIGHT-size_y));
 			if(static_data == nullptr)
 			{
-				static_data = windows.load_data(static_data);
+				if(file == nullptr)
+					windows.load_file(&file);
+				else
+					windows.parsing_window(&static_data,file);
 			}
 			else	
 				windows.static_window(static_data);
@@ -128,5 +132,12 @@ int main()
 	
 	free(static_data);
 	static_data=nullptr;
+
+	if(file != nullptr)
+	{
+		free(file);
+		file=nullptr;
+	}
+
 	return 0;
 }

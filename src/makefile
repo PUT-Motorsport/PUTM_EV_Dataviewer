@@ -1,6 +1,8 @@
 CPPFLAGS_END = -lPocoNet -lPocoFoundation -lpthread -lallegro -lallegro_main -lallegro_primitives 
 
-CPPFLAGS = -Wall -std=c++11 -I $(shell pwd)/ -L $(shell pwd)
+CPPFLAGS =  -Wall -Wpedantic -std=c++11
+INCFLAGS = -I $(shell pwd)/  -I $(shell pwd)/imgui 
+LINKERFLAGS = -L $(shell pwd) -L $(shell pwd)/imgui
 SRCS := $(wildcard *.cpp)
 SRCS_IMGUI := $(wildcard imgui/*.cpp)
 #SRCS = $(wildcard */*.cpp)
@@ -13,12 +15,12 @@ COMPILER = g++
 all: main 
 
 main: ${OBJ} ${OBJ_IMGUI}
-	$(COMPILER) $(CPPFLAGS) -o data_view ${OBJ} ${OBJ_IMGUI} $(CPPFLAGS_END)
+	$(COMPILER) $(CPPFLAGS) $(INCFLAGS) $(LINKERFLAGS) -o data_view ${OBJ} ${OBJ_IMGUI} $(CPPFLAGS_END)
 run: main
 	./data_view
 
 main.o: main.cpp
-	$(COMPILER) $(CPPFLAGS) -c main.cpp $(CPPFLAGS_END)
+	$(COMPILER) $(CPPFLAGS) $(INCFLAGS) $(LINKERFLAGS) -c main.cpp $(CPPFLAGS_END)
 
 clean: 
 	echo "Cleaning binary files"
@@ -28,9 +30,9 @@ clean:
 
 #add all h files w/o cpp files
 %.o: %.cpp %.h
-	$(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END)
+	$(COMPILER) $(CPPFLAGS) $(INCFLAGS) $(LINKERFLAGS) -c $< $(CPPFLAGS_END)
 
 imgui/%.o: imgui/%.cpp imgui/%.h
-	$(COMPILER) $(CPPFLAGS) -c $< $(CPPFLAGS_END) -o $(shell echo $< | cut -d . -f 1).o
+	$(COMPILER) $(CPPFLAGS) $(INCFLAGS) $(LINKERFLAGS) -c $< $(CPPFLAGS_END) -o $(shell echo $< | cut -d . -f 1).o
 
 

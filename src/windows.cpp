@@ -2,8 +2,6 @@
 
 // https://github.com/epezent/implot
 
-#define SLOWING_FACTOR 40
-
 using namespace std;
 
 void Windows::http_window(Data_container* data)
@@ -112,9 +110,7 @@ void Windows::static_window(Data_container* data)
 		//ImPlotAxisFlags_AutoFit
 		for(int i=0;i<data->get_num_data();i++)
 		{
-			stringstream ss;
-			ss << i;
-			ImPlot::PlotLine(ss.str().c_str(),(float*)this->static_x,data->get_vector_data_ptr(i),data->get_vector_size(i));
+			ImPlot::PlotLine(data->get_names()[i].c_str(),(float*)this->static_x,data->get_vector_data_ptr(i),data->get_vector_size(i));
 		}
 		ImPlot::EndPlot();
 	}
@@ -140,44 +136,81 @@ void Windows::select_window(Visibility_windows* visibility)
 	ImGui::End();
 }
 
-Data_container* Windows::load_data(Data_container* static_data)
+void Windows::load_file(fstream** file)
 {
-	ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".csv", ".");
+	//TODO: Swap theese to make it portable
+	//ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".csv", ".");
+	ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".csv", "/home/czarnobylu/.files/");
 	if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) 
 	{
 		if (ImGuiFileDialog::Instance()->IsOk())
 		{
-		std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-		std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-		static_data = new Data_container(4);	
-		fstream file;
-		file.open(filePathName,ios::in);
-		string a = "";
-		while(getline(file,a))
+			std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName(); 
+			std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+			cout<<"Loaded file: "<<filePathName<<endl;
+			(*file) = new fstream;
+			(*file)->open(filePathName,ios::in);
+			printf("%p\n",*file);
+		}
+		ImGuiFileDialog::Instance()->Close();
+	}	
+}
+
+void Windows::parsing_window(Data_container** static_data,fstream* file)
+{
+	ImGui::Begin("Parsing Window",NULL,this->main_flags);
+	string a = "";
+	if(!this->load_header)
+	{
+		getline(*file,a);
+		stringstream temp(a);
+		for(string i; getline(temp, i, ',');)
 		{
-			if(a[0]=='D') //TODO: Replace with a better header-line identifier
-				continue;
-			stringstream temp(a);
-			float nums[4];
-			int it=0;
-			for(float i; temp >> i;)
-			{
-				nums[it] = i;
-				it+=1; 
-				if (temp.peek() == ',')
-					temp.ignore();
-			}
-			for(int i=0;i<4;i++)
-			{
-				static_data->push_to_vector(i,nums[i]);
-				//cout<<nums[i]<<endl;
-			}
+			this->names.push_back(new pair<string,bool>(i,true));
+			cout<<i<<endl;
 		}
-		file.close();
-		cerr<<"loaded "<<filePathName<<endl;
-		}
-	ImGuiFileDialog::Instance()->Close();
+		this->load_header = true;
 	}
 	
-	return static_data;
+	ImGui::Text("Fuck off kittens");
+	//select the fields that you will input
+	for(auto i : this->names)
+	{
+		ImGui::Checkbox(i->first.c_str(),&(i->second));
+	}
+	if(!this->load)
+		this->load = ImGui::Button("OK",ImVec2(30,20));
+	if(this->load)
+	{
+		int fields = 0;
+		for(auto i : this->names)
+			if(i->second) fields++;
+		
+		(*static_data) = new Data_container(fields);
+		Data_container* data = *static_data;
+		for(auto i : this->names)
+			if(i->second) data->push_name(i->first);
+		int it=0;
+		int field = 0;
+		while(getline(*file,a))
+		{
+			it=0;
+			field = 0;
+			stringstream line(a);
+			for(float i; line>>i;)
+			{
+				if(names[field]->second)
+				{
+					data->push_to_vector(it,i);
+					it++;
+				}
+				field++;
+				if (line.peek() == ',')
+					line.ignore();
+			}
+		}
+		file->close();
+	}
+	ImGui::End();
 }
+
