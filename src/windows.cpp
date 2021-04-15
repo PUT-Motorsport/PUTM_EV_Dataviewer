@@ -20,7 +20,7 @@ void Windows::http_window(Data_container* data)
 
 	ImGui::PlotConfig conf;
 	//float* val;[] = {data->get_vector_data_ptr(0),data->get_vector_data_ptr(1)};
-	float* val[MAX_DATA_STREAMS];
+	double* val[MAX_DATA_STREAMS];
 	ImU32 colors[MAX_DATA_STREAMS];
 	int it=0;
 	for(int i=0;i<data->get_num_data();i++)
@@ -98,19 +98,37 @@ void Windows::static_window(Data_container* data)
 
 	ImGui::BeginChild("child",ImGui::GetWindowSize(),false,this->main_flags);
 	//TODO: fix this ugly hack
-	for (int i = 0; i < 1000; i++)
+	if( this->static_x == nullptr)
 	{
-		this->static_x[i]=(float)i;
+		this->static_x = new volatile double[10000000];
+		for (int i = 0; i < 10000000; i++)
+		{
+			this->static_x[i]=(double)i;
+		}
+		cout<<"Oi mate"<<endl;
 	}
 	
 	ImGui::PushStyleColor(ImGuiCol_FrameBg,ImVec4(0,0,0,0));
+	ImPlot::FitNextPlotAxes(false,true);
 	//ImPlot::ShowDemoWindow();
-	if (ImPlot::BeginPlot("My Plot",NULL,NULL,ImGui::GetWindowSize())); 
+
+	//TODO: figure out that annoying AxisFlags jitter problem
+
+	if (ImPlot::BeginPlot("My Plot",NULL,NULL,ImGui::GetWindowSize()),0,0,ImPlotAxisFlags_AutoFit); 
 	{
-		//ImPlotAxisFlags_AutoFit
 		for(int i=0;i<data->get_num_data();i++)
 		{
-			ImPlot::PlotLine(data->get_names()[i].c_str(),(float*)this->static_x,data->get_vector_data_ptr(i),data->get_vector_size(i));
+			//TODO: Add "glue" between segments (there's a 1u gap in filling, no data actually is lost)"
+			//TODO: Add a generator object to X axis, due to inaccuracy with larger numbers
+			int x_left=ImPlot::GetPlotLimits().Min().x,x_right=ImPlot::GetPlotLimits().Max().x;
+			if(x_left < 0) x_left = 0;
+			for(int j=(int)(x_left/1000);  j<=(int)(x_right/1000)+1; j++)
+				ImPlot::PlotLine<double>(data->get_names()[i].c_str(),(double*)this->static_x+1000*j,(double*)data->get_vector_data_ptr(i)+1000*j,1000,1000*j);
+				//ImPlot::PlotStairs<double>(data->get_names()[i].c_str(),(double*)this->static_x+1000*j,(double*)data->get_vector_data_ptr(i)+1000*j,1000,1000*j);
+			//cout<<ImPlot::GetPlotLimits().Min().x<<endl;
+			//TODO: check if the change in imconfig.h is needed after drawing in blocks
+			//ImPlot::PlotLine<double>(data->get_names()[i].c_str(),(double*)this->static_x,(double*)data->get_vector_data_ptr(i),1000);
+			
 		}
 		ImPlot::EndPlot();
 	}
@@ -192,12 +210,14 @@ void Windows::parsing_window(Data_container** static_data,fstream* file)
 			if(i->second) data->push_name(i->first);
 		int it=0;
 		int field = 0;
+		long long iter=0;
 		while(getline(*file,a))
 		{
+			if(++iter%1000==0) cout<<iter<<endl;
 			it=0;
 			field = 0;
 			stringstream line(a);
-			for(float i; line>>i;)
+			for(double i; line>>i;)
 			{
 				if(names[field]->second)
 				{

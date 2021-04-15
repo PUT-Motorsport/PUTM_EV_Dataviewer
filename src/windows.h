@@ -45,7 +45,7 @@ class Windows
 	int static_frame_count = 20;
 	int static_offset=0;
 	int static_data_size;
-	volatile float static_x[1000];
+	volatile double* static_x=nullptr;
 
 
 	//variables for parsing_window

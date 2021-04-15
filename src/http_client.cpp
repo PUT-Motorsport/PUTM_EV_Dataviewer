@@ -46,10 +46,10 @@ void tFunction(Data_container* dataPointer)
 			while(getline(response, word, ',')) 
 				a[iterator++] = word;
 			//cout<<"Data: "<<a[0]<<" "<<a[1]<<endl;
-			data.push_to_vector(0,stof(a[0]));
-			data.push_to_vector(1,stof(a[1]));
-			data.push_to_vector(2,stof(a[2]));
-			data.push_to_vector(3,stof(a[3])); //TODO: Kinda the same
+			data.push_to_vector(0,stod(a[0]));
+			data.push_to_vector(1,stod(a[1]));
+			data.push_to_vector(2,stod(a[2]));
+			data.push_to_vector(3,stod(a[3])); //TODO: Kinda the same
 			data.raise_data_flag();
 			usleep(0.25*1000000);
 		}

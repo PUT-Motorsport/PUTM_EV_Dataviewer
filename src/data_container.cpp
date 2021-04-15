@@ -7,7 +7,7 @@ Data_container::Data_container(int num_data)
 	this->num_data = num_data;
 	for(int i=0;i<num_data;i++)
 	{
-		this->data.push_back(new vector<float>);
+		this->data.push_back(new vector<double>);
 	}
 	this->new_data_flag = false;
 }
@@ -18,7 +18,7 @@ Data_container::~Data_container()
 		free(i);
 	
 }
-void Data_container::push_to_vector(int num,float value)
+void Data_container::push_to_vector(int num,double value)
 {
 	//Potential TODO: add exceptions
 	if(num >= this->num_data)
@@ -29,14 +29,14 @@ void Data_container::push_to_vector(int num,float value)
 	this->data[num]->push_back(value);
 }
 
-float Data_container::pop_from_vector(int num)
+double Data_container::pop_from_vector(int num)
 {
 	if(num >= this->num_data)
 	{
 		cerr<<"No data field allocated"<<endl;
 		exit(1);
 	}
-	float a = *(this->data[num]->end());
+	double a = *(this->data[num]->end());
 	this->data[num]->pop_back();
 	return a;
 }
@@ -56,7 +56,7 @@ bool Data_container::peek_data_flag()
 	return this->new_data_flag;
 }
 
-float* Data_container::get_vector_data_ptr(int num)
+double* Data_container::get_vector_data_ptr(int num)
 {
 	if(num >= this->num_data)
 	{
