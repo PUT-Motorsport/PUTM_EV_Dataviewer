@@ -96,7 +96,12 @@ void Windows::static_window(Data_container* data)
 {
 	ImGui::Begin("Static",NULL,this->main_flags);
 
-	ImGui::BeginChild("child",ImGui::GetWindowSize(),false,this->main_flags);
+	ImGui::BeginChild("menu",ImVec2(100,ImGui::GetWindowHeight()),false,this->main_flags);
+	ImGui::Text("Sterowanie");
+	ImGui::EndChild();
+	ImGui::SetNextWindowPos(ImVec2(100,0));
+	
+	ImGui::BeginChild("child",ImVec2(ImGui::GetWindowWidth()-100,ImGui::GetWindowHeight()),false,this->main_flags);
 	//TODO: fix this ugly hack
 	if( this->static_x == nullptr)
 	{
@@ -109,17 +114,14 @@ void Windows::static_window(Data_container* data)
 	}
 	
 	ImGui::PushStyleColor(ImGuiCol_FrameBg,ImVec4(0,0,0,0));
-	ImPlot::FitNextPlotAxes(false,true);
 	//ImPlot::ShowDemoWindow();
 
-	//TODO: figure out that annoying AxisFlags jitter problem
-
-	if (ImPlot::BeginPlot("My Plot",NULL,NULL,ImGui::GetWindowSize()),0,0,ImPlotAxisFlags_AutoFit); 
+	if (ImPlot::BeginPlot("nazwa",NULL,NULL,ImGui::GetWindowSize(),ImPlotFlags_NoTitle,0,ImPlotAxisFlags_AutoFit)); 
 	{
 		for(int i=0;i<data->get_num_data();i++)
 		{
 			//TODO: Add "glue" between segments (there's a 1u gap in filling, no data actually is lost)"
-			//TODO: Add a generator object to X axis, due to inaccuracy with larger numbers
+			//TODO: Add a generator to X axis, due to inaccuracy with larger numbers
 			int x_left=ImPlot::GetPlotLimits().Min().x,x_right=ImPlot::GetPlotLimits().Max().x;
 			if(x_left < 0) x_left = 0;
 			for(int j=(int)(x_left/1000);  j<=(int)(x_right/1000)+1; j++)
@@ -213,7 +215,7 @@ void Windows::parsing_window(Data_container** static_data,fstream* file)
 		long long iter=0;
 		while(getline(*file,a))
 		{
-			if(++iter%1000==0) cout<<iter<<endl;
+			if(++iter%100000==0) cout<<iter<<endl;
 			it=0;
 			field = 0;
 			stringstream line(a);
