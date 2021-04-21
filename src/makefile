@@ -1,6 +1,6 @@
-CPPFLAGS_END = -lPocoNet -lPocoFoundation -lpthread -lallegro -lallegro_main -lallegro_primitives 
+CPPFLAGS_END = -lpthread -lallegro -lallegro_main -lallegro_primitives 
 
-CPPFLAGS =  -Wall -Wpedantic -std=c++11
+CPPFLAGS =  -Wall -Wpedantic -std=c++1
 INCFLAGS = -I $(shell pwd)/  -I $(shell pwd)/imgui 
 LINKERFLAGS = -L $(shell pwd) -L $(shell pwd)/imgui
 SRCS := $(wildcard *.cpp)
