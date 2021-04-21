@@ -6,15 +6,11 @@
 	```
 2. Install additional dependencies into src/ subfolder
 
-	2.1: Install POCO
-	
-	Compile/install complete POCO libraries according to https://pocoproject.org/download.html#building
-	
-	2.2: Install allegro5:
+	2.1: Install allegro5:
 	
 	- Debian/ubuntu:
 	```bash 
-	sudo apt install allegro
+	sudo apt install liballegro5-dev
 	```
 	- Arch/Manjaro:
 	```bash 
@@ -26,6 +22,7 @@
 	git clone https://github.com/ocornut/imgui
 	git clone https://github.com/soulthreads/imgui-plot
 	git clone https://github.com/epezent/implot
+	git clone https://github.com/aiekick/ImGuiFileDialog
 	```
 3. Copy backend files from imgui/backends subfolder
 	```bash
@@ -38,6 +35,7 @@
 	cp ../imgui-plot/src/* ./
 	cp ../implot/*.cpp ./
 	cp ../implot/*.h ./
+	#add ImGuiFileDialog as per instructions in its README
 	```
 5. Make and run the binary
 	```bash
