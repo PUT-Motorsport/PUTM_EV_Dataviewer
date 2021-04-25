@@ -92,16 +92,29 @@ void Windows::http_window(Data_container* data)
 	ImGui::End();
 }
 
+void modify_style(ImPlotStyle* style)
+{
+	using namespace ImGui;
+	Text("Grubość linii:");
+	SliderFloat("##asd", &(style->LineWeight), 0.0f, 5.0f, "%.1f");
+	Text("Anty-Aliasing:");
+	ImGui::Checkbox("##asdf", &(style->AntiAliasedLines));
+}
+
 void Windows::static_window(Data_container* data)
 {
+	volatile float width=1.0f;
 	ImGui::Begin("Static",NULL,this->main_flags);
 
-	ImGui::BeginChild("menu",ImVec2(100,ImGui::GetWindowHeight()),false,this->main_flags);
+	ImGui::BeginChild("menu",ImVec2(150,ImGui::GetWindowHeight()),false,this->main_flags);
 	ImGui::Text("Sterowanie");
+	//ImPlot::ShowStyleEditor();
+	modify_style(&ImPlot::GetStyle());
+	//ImGui::DragFloat("Grubość",)
 	ImGui::EndChild();
-	ImGui::SetNextWindowPos(ImVec2(100,0));
+	ImGui::SetNextWindowPos(ImVec2(150,0));
 	
-	ImGui::BeginChild("child",ImVec2(ImGui::GetWindowWidth()-100,ImGui::GetWindowHeight()),false,this->main_flags);
+	ImGui::BeginChild("child",ImVec2(ImGui::GetWindowWidth()-150,ImGui::GetWindowHeight()),false,this->main_flags);
 	//TODO: fix this ugly hack
 	if( this->static_x == nullptr)
 	{
@@ -123,6 +136,7 @@ void Windows::static_window(Data_container* data)
 			//TODO: Add "glue" between segments (there's a 1u gap in filling, no data actually is lost)"
 			//TODO: Add a generator to X axis, due to inaccuracy with larger numbers
 			int x_left=ImPlot::GetPlotLimits().Min().x,x_right=ImPlot::GetPlotLimits().Max().x;
+
 			if(x_left < 0) x_left = 0;
 			for(int j=(int)(x_left/1000);  j<=(int)(x_right/1000)+1; j++)
 				ImPlot::PlotLine<double>(data->get_names()[i].c_str(),(double*)this->static_x+1000*j,(double*)data->get_vector_data_ptr(i)+1000*j,1000,1000*j);
