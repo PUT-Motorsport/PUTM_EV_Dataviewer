@@ -46,12 +46,14 @@ class Windows
 	int static_offset=0;
 	int static_data_size;
 	volatile double* static_x=nullptr;
-
+	int num_tiles = 1;
 
 	//variables for parsing_window
 	bool load=false;
 	bool load_header=false;
 	vector<pair<std::string,bool>*> names;
+
+
 public:
 	void http_window(Data_container* data_ptr);
 	void static_window(Data_container* data);

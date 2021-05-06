@@ -110,6 +110,12 @@ void Windows::static_window(Data_container* data)
 	ImGui::Text("Sterowanie");
 	//ImPlot::ShowStyleEditor();
 	modify_style(&ImPlot::GetStyle());
+	ImGui::Button("split!",ImVec2(100,100));
+	if(ImGui::IsItemActivated())
+		this->num_tiles+=1;
+	stringstream temp;
+	temp << this->num_tiles;
+	ImGui::Text(temp.str().c_str());
 	//ImGui::DragFloat("Grubość",)
 	ImGui::EndChild();
 	ImGui::SetNextWindowPos(ImVec2(150,0));
@@ -126,31 +132,36 @@ void Windows::static_window(Data_container* data)
 		cout<<"Oi mate"<<endl;
 	}
 	
-	ImGui::PushStyleColor(ImGuiCol_FrameBg,ImVec4(0,0,0,0));
 	//ImPlot::ShowDemoWindow();
-
-	if (ImPlot::BeginPlot("nazwa",NULL,NULL,ImGui::GetWindowSize(),ImPlotFlags_NoTitle,0,ImPlotAxisFlags_AutoFit)); 
+	for(int k=0;k<this->num_tiles;k++)
 	{
-		for(int i=0;i<data->get_num_data();i++)
+		ImGui::PushStyleColor(ImGuiCol_FrameBg,ImVec4(0,0,0,0));
+		stringstream asdf;
+		asdf << k; 
+		if (ImPlot::BeginPlot(asdf.str().c_str(),NULL,NULL,ImVec2(ImGui::GetWindowSize().x,int(ImGui::GetWindowSize().y/this->num_tiles)),ImPlotFlags_NoTitle,0,ImPlotAxisFlags_AutoFit)); 
 		{
-			//TODO: Add "glue" between segments (there's a 1u gap in filling, no data actually is lost)"
-			//TODO: Add a generator to X axis, due to inaccuracy with larger numbers
-			int x_left=ImPlot::GetPlotLimits().Min().x,x_right=ImPlot::GetPlotLimits().Max().x;
+			for(int i=0;i<data->get_num_data();i++)
+			{
+				//TODO: Add "glue" between segments (there's a 1u gap in filling, no data actually is lost)"
+				//TODO: Add a generator to X axis, due to inaccuracy with larger numbers
+				int x_left=ImPlot::GetPlotLimits().Min().x,x_right=ImPlot::GetPlotLimits().Max().x;
 
-			if(x_left < 0) x_left = 0;
-			for(int j=(int)(x_left/1000);  j<=(int)(x_right/1000)+1; j++)
-				ImPlot::PlotLine<double>(data->get_names()[i].c_str(),(double*)this->static_x+1000*j,(double*)data->get_vector_data_ptr(i)+1000*j,1000,1000*j);
-				//ImPlot::PlotStairs<double>(data->get_names()[i].c_str(),(double*)this->static_x+1000*j,(double*)data->get_vector_data_ptr(i)+1000*j,1000,1000*j);
-			//cout<<ImPlot::GetPlotLimits().Min().x<<endl;
-			//TODO: check if the change in imconfig.h is needed after drawing in blocks
-			//ImPlot::PlotLine<double>(data->get_names()[i].c_str(),(double*)this->static_x,(double*)data->get_vector_data_ptr(i),1000);
-			
+				if(x_left < 0) x_left = 0;
+				for(int j=(int)(x_left/1000);  j<=(int)(x_right/1000)+1; j++)
+					ImPlot::PlotLine<double>(data->get_names()[i].c_str(),(double*)this->static_x+1000*j,(double*)data->get_vector_data_ptr(i)+1000*j,1000,1000*j);
+					//ImPlot::PlotStairs<double>(data->get_names()[i].c_str(),(double*)this->static_x+1000*j,(double*)data->get_vector_data_ptr(i)+1000*j,1000,1000*j);
+				//cout<<ImPlot::GetPlotLimits().Min().x<<endl;
+				//TODO: check if the change in imconfig.h is needed after drawing in blocks
+				//ImPlot::PlotLine<double>(data->get_names()[i].c_str(),(double*)this->static_x,(double*)data->get_vector_data_ptr(i),1000);
+
+			}
+			ImPlot::EndPlot();
+			ImGui::PopStyleColor();
 		}
-		ImPlot::EndPlot();
 	}
-	ImGui::PopStyleColor();
+	
 	ImGui::EndChild();
-
+	
 	ImGui::End();
 }
 
