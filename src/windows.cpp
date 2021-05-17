@@ -141,25 +141,20 @@ void Windows::static_window(Data_container* data)
 		temp << this->num_tiles;
 		ImGui::Text(temp.str().c_str());
 		ImGui::EndChild();
-	}
-	//ImGui::DragFloat("Grubość",)
-	ImGui::SetNextWindowPos(ImVec2(150,0));
-	
-	ImGui::BeginChild("child",ImVec2(ImGui::GetWindowWidth()-150,ImGui::GetWindowHeight()),false,this->main_flags);
-	//TODO: fix this ugly hack
-	if( this->static_x == nullptr)
-	{
-		this->static_x = new volatile double[10000000];
-		for (int i = 0; i < 10000000; i++)
+		ImGui::SetNextWindowPos(ImVec2(150,0));
+		ImGui::BeginChild("child",ImVec2(ImGui::GetWindowWidth()-150,ImGui::GetWindowHeight()),false,this->main_flags);
+		
+		//TODO: fix this ugly hack
+		if( this->static_x == nullptr)
 		{
-			this->static_x[i]=(double)i;
+			this->static_x = new volatile double[10000000];
+			for (int i = 0; i < 10000000; i++)
+			{
+				this->static_x[i]=(double)i;
+			}
+			cout<<"Oi mate"<<endl;
 		}
-		cout<<"Oi mate"<<endl;
-	}
-	
-	//ImPlot::ShowDemoWindow();
-	for(int k=0;k<this->num_tiles;k++)
-	{
+
 		ImGui::PushStyleColor(ImGuiCol_FrameBg,ImVec4(0,0,0,0));
 		stringstream asdf;
 		asdf << k; 
@@ -183,10 +178,10 @@ void Windows::static_window(Data_container* data)
 			ImPlot::EndPlot();
 			ImGui::PopStyleColor();
 		}
+
+		ImGui::EndChild();
 	}
-	
-	ImGui::EndChild();
-	
+	//ImPlot::ShowDemoWindow();
 	ImGui::End();
 }
 
