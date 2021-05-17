@@ -28,6 +28,14 @@ struct Visibility_windows
 	bool static_plots = false;
 };
 
+struct plot_settings
+{
+	float lw; //line weight
+	bool aa; //anti-aliasing
+	//...
+};
+
+
 class Windows
 {
 	ImGuiWindowFlags main_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar;
@@ -47,6 +55,7 @@ class Windows
 	int static_data_size;
 	volatile double* static_x=nullptr;
 	int num_tiles = 1;
+	vector<plot_settings> settings;
 
 	//variables for parsing_window
 	bool load=false;

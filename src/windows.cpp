@@ -92,13 +92,15 @@ void Windows::http_window(Data_container* data)
 	ImGui::End();
 }
 
-void modify_style(ImPlotStyle* style)
+void modify_style(ImPlotStyle* style,plot_settings* s)
 {
 	using namespace ImGui;
 	Text("Grubość linii:");
-	SliderFloat("##asd", &(style->LineWeight), 0.0f, 5.0f, "%.1f");
+	SliderFloat("##asd", &(s->lw), 0.0f, 5.0f, "%.1f");
 	Text("Anty-Aliasing:");
-	ImGui::Checkbox("##asdf", &(style->AntiAliasedLines));
+	ImGui::Checkbox("##asdf", &(s->aa));
+	style->LineWeight = s->lw;
+	style->AntiAliasedLines = s->aa;
 }
 
 void Windows::static_window(Data_container* data)
@@ -106,20 +108,39 @@ void Windows::static_window(Data_container* data)
 	volatile float width=1.0f;
 	ImGui::Begin("Static",NULL,this->main_flags);
 	int temp = this->num_tiles;
+	if(this->settings.size()==0)
+	{
+		plot_settings s;
+		s.lw = ImPlot::GetStyle().LineWeight;
+		s.aa = ImPlot::GetStyle().AntiAliasedLines;
+		this->settings.push_back(s);
+		cout<<"Pushing to settings"<<endl;
+
+	}
 	for(int k=0;k<temp;k++)
 	{
-	ImGui::SetNextWindowPos(ImVec2(0,int(ImGui::GetWindowSize().y/this->num_tiles)*k));
-	ImGui::BeginChild("menu",ImVec2(150,int(ImGui::GetWindowSize().y/this->num_tiles)),false,this->main_flags);
-	ImGui::Text("Sterowanie");
-	//ImPlot::ShowStyleEditor();
-	modify_style(&ImPlot::GetStyle());
-	ImGui::Button("split!",ImVec2(100,100));
-	if(ImGui::IsItemActivated())
-		this->num_tiles+=1;
-	stringstream temp;
-	temp << this->num_tiles;
-	ImGui::Text(temp.str().c_str());
-	ImGui::EndChild();
+		ImGui::SetNextWindowPos(ImVec2(10,int(ImGui::GetWindowSize().y/this->num_tiles)*k));
+		stringstream name;
+		name << "sterowanie"<< k;
+		ImGui::BeginChild(name.str().c_str(),ImVec2(140,int(ImGui::GetWindowSize().y/this->num_tiles)),false,this->main_flags);
+		ImGui::Text("Sterowanie");
+		//ImPlot::ShowStyleEditor();
+		modify_style(&ImPlot::GetStyle(),this->settings.data()+k);
+		if(k==0)
+		{
+			ImGui::Button("split!",ImVec2(100,100));
+			if(ImGui::IsItemActivated())
+			{
+				this->num_tiles+=1;
+				plot_settings new_settings;
+				new_settings.lw = ((plot_settings)*(this->settings.begin())).lw;
+				this->settings.push_back(new_settings);
+			}
+		}
+		stringstream temp;
+		temp << this->num_tiles;
+		ImGui::Text(temp.str().c_str());
+		ImGui::EndChild();
 	}
 	//ImGui::DragFloat("Grubość",)
 	ImGui::SetNextWindowPos(ImVec2(150,0));
@@ -221,7 +242,7 @@ void Windows::parsing_window(Data_container** static_data,fstream* file)
 		this->load_header = true;
 	}
 	
-	ImGui::Text("Fuck off kittens");
+	ImGui::Text("Load:");
 	//select the fields that you will input
 	for(auto i : this->names)
 	{
