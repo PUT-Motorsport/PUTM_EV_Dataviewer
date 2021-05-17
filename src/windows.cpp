@@ -105,8 +105,11 @@ void Windows::static_window(Data_container* data)
 {
 	volatile float width=1.0f;
 	ImGui::Begin("Static",NULL,this->main_flags);
-
-	ImGui::BeginChild("menu",ImVec2(150,ImGui::GetWindowHeight()),false,this->main_flags);
+	int temp = this->num_tiles;
+	for(int k=0;k<temp;k++)
+	{
+	ImGui::SetNextWindowPos(ImVec2(0,int(ImGui::GetWindowSize().y/this->num_tiles)*k));
+	ImGui::BeginChild("menu",ImVec2(150,int(ImGui::GetWindowSize().y/this->num_tiles)),false,this->main_flags);
 	ImGui::Text("Sterowanie");
 	//ImPlot::ShowStyleEditor();
 	modify_style(&ImPlot::GetStyle());
@@ -116,8 +119,9 @@ void Windows::static_window(Data_container* data)
 	stringstream temp;
 	temp << this->num_tiles;
 	ImGui::Text(temp.str().c_str());
-	//ImGui::DragFloat("Grubość",)
 	ImGui::EndChild();
+	}
+	//ImGui::DragFloat("Grubość",)
 	ImGui::SetNextWindowPos(ImVec2(150,0));
 	
 	ImGui::BeginChild("child",ImVec2(ImGui::GetWindowWidth()-150,ImGui::GetWindowHeight()),false,this->main_flags);
