@@ -178,6 +178,24 @@ void Windows::static_window(Data_container* data)
 			ImPlot::EndPlot();
 			ImGui::PopStyleColor();
 		}
+		float mouse_x = ImGui::GetCursorPosX();
+		if(ImGui::IsItemHovered())
+		{
+			int y_min,y_max;
+			y_min = ImGui::GetWindowPos().y;
+			y_max = y_min+ImGui::GetWindowSize().y;
+			ImGui::SetNextWindowPos(ImVec2(0,0));
+			ImGui::SetNextWindowSize(ImVec2(1600,900));
+			
+			ImGui::Begin("##Overlay",NULL,ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs);
+			ImGui::SetWindowFocus();
+			static ImVec4 col = ImVec4(1.0f, 1.0f, 0.4f, 1.0f);
+			const ImU32 col32 = ImColor(col);
+			ImDrawList* list = ImGui::GetWindowDrawList();
+			list->AddLine(ImVec2(ImGui::GetMousePos().x,y_min),ImVec2(ImGui::GetMousePos().x,y_max),col32,2.0f);
+			//list->AddRectFilled(ImVec2(0,0),ImVec2(200,200),col32);
+			ImGui::End();
+		}
 
 		ImGui::EndChild();
 	}
